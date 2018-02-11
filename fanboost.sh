@@ -11,4 +11,3 @@ FAN_1_SPEED_SET="$FAN_PATH/fan1_output"
 FAN_2_MANUAL="$FAN_PATH/fan2_manual"
 FAN_2_CURRENT_SPEED="$FAN_PATH/fan2_input"
 FAN_2_SPEED_SET="$FAN_PATH/fan2_output"
-
