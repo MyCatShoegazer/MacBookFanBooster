@@ -32,31 +32,6 @@ function check_root() {
     fi
 }
 
-if [ -z "$1" ]
-then
-    echo "No argument supplied!"
-    ./"$0" -h
-fi
-
-if [ "$1" = "-h" ]
-then
-    printf '%s\n' "Available arguments:"
-    printf '\t%s\t%c\t%s\n' "-h" "-" "prints this help."
-    printf '\t%s\t%c\t%s\n' "-v" "-" "prints sensor values to screen."
-    printf '\t%s\t%c\t%s\n' "--on" "-" "boosts fans. (required root)"
-    printf '\t%s\t%c\t%s\n' "--off" "-" "returns fan speed control to system. (required root)"
-fi
-
-if [ "$1" = "-v" ]
-then
-    while true;
-    do
-        clear
-        print_sensors
-        sleep 0.3
-    done
-fi
-
 if [ "$1" = "--on" ]
 then
     check_root
@@ -82,4 +57,22 @@ then
     echo 0 > $FAN_2$FAN_MANUAL_MODE_PORT
 
     ./"$0" -v
+elif [ "$1" = "-v" ]
+then
+    while true;
+        do
+            clear
+            print_sensors
+            sleep 0.3
+        done
+elif [ "$1" = "-h" ]
+then
+    printf '%s\n' "Available arguments:"
+    printf '\t%s\t%c\t%s\n' "-h" "-" "prints this help."
+    printf '\t%s\t%c\t%s\n' "-v" "-" "prints sensor values to screen."
+    printf '\t%s\t%c\t%s\n' "--on" "-" "boosts fans. (required root)"
+    printf '\t%s\t%c\t%s\n' "--off" "-" "returns fan speed control to system. (required root)"
+else
+    echo "Unknown argument: $1!"
+    ./"$0" -h
 fi
