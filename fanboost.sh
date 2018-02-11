@@ -8,6 +8,7 @@ FAN_1="$FAN_PATH/fan1_"
 FAN_2="$FAN_PATH/fan2_"
 
 FAN_CURRENT_SPEED_PORT="input"
+FAN_MAX_SPEED_PORT="max"
 FAN_SPEED_SET_PORT="output"
 FAN_MANUAL_MODE_PORT="manual"
 
@@ -45,4 +46,31 @@ then
         print_sensors
         sleep 0.3
     done
+fi
+
+if [ "$1" = "--on" ]
+then
+    check_root
+
+    FAN_1_MAX_SPEED=$(<$FAN_1$FAN_MAX_SPEED_PORT)
+    FAN_1_MAX_SPEED=$(($FAN_1_MAX_SPEED - 200))
+
+    FAN_2_MAX_SPEED=$(<$FAN_2$FAN_MAX_SPEED_PORT)
+    FAN_2_MAX_SPEED=$(($FAN_2_MAX_SPEED - 200))
+
+    echo 1 > $FAN_1$FAN_MANUAL_MODE_PORT
+    echo 1 > $FAN_2$FAN_MANUAL_MODE_PORT
+
+    echo $FAN_1_MAX_SPEED > $FAN_1$FAN_SPEED_SET_PORT
+    echo $FAN_2_MAX_SPEED > $FAN_2$FAN_SPEED_SET_PORT
+
+    ./"$0" -v
+elif [ "$1" = "--off" ]
+then
+    check_root
+
+    echo 0 > $FAN_1$FAN_MANUAL_MODE_PORT
+    echo 0 > $FAN_2$FAN_MANUAL_MODE_PORT
+
+    ./"$0" -v
 fi
