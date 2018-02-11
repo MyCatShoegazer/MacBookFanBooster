@@ -33,6 +33,8 @@ if [ "$1" = "-v" ]
 then
     while true;
     do
+        clear
         print_sensors
+        sleep 0.3
     done
 fi
