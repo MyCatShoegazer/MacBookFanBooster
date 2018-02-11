@@ -35,7 +35,16 @@ function check_root() {
 if [ -z "$1" ]
 then
     echo "No argument supplied!"
-    exit 1
+    ./"$0" -h
+fi
+
+if [ "$1" = "-h" ]
+then
+    printf '%s\n' "Available arguments:"
+    printf '\t%s\t%c\t%s\n' "-h" "-" "prints this help."
+    printf '\t%s\t%c\t%s\n' "-v" "-" "prints sensor values to screen."
+    printf '\t%s\t%c\t%s\n' "--on" "-" "boosts fans. (required root)"
+    printf '\t%s\t%c\t%s\n' "--off" "-" "returns fan speed control to system. (required root)"
 fi
 
 if [ "$1" = "-v" ]
