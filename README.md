@@ -42,3 +42,8 @@ To complete booster script removing provide:
 sudo rm /usr/sbin/fanboost
 sudo rm /usr/bin/fanboost
 ```
+
+## Latest release
+
+This link providing
+[latest release page](https://github.com/MyCatShoegazer/MacBookFanBooster/releases/latest).
