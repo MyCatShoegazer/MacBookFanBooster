@@ -23,4 +23,8 @@ function print_sensors() {
     printf '%s\t\t%s%s\n' "Fan 2:" "$FAN_2_RPM" "rpm"
 }
 
-print_sensors
+if [ -z "$1" ]
+then
+    echo "No argument supplied!"
+    exit 1
+fi
