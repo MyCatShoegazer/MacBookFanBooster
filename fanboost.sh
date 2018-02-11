@@ -28,3 +28,11 @@ then
     echo "No argument supplied!"
     exit 1
 fi
+
+if [ "$1" = "-v" ]
+then
+    while true;
+    do
+        print_sensors
+    done
+fi
