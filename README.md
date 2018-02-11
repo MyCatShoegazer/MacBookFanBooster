@@ -23,7 +23,7 @@ Available arguments:
 
 ### Enabling boost
 
-To boost your fans type `sudo fanboost.sh --on` in your termnial. It will spin fans to their max RPM - 200 and print status of core temperature and fan RPMs.
+To boost your fans type `sudo fanboost --on` in your termnial. It will spin fans to their max RPM - 200 and print status of core temperature and fan RPMs.
 
 To close status printing provide `ctrl+c` on your keyboard.
 
@@ -39,6 +39,6 @@ To close status printing provide `ctrl+c` on your keyboard.
 
 To complete booster script removing provide:
 ``` shell
-sudo rm /usr/sbin/fanboost.sh
-sudo rm /usr/bin/fanboost.sh
+sudo rm /usr/sbin/fanboost
+sudo rm /usr/bin/fanboost
 ```
