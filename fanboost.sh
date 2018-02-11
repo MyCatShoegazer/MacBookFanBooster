@@ -84,7 +84,7 @@ then
     echo $FAN_2_MAX_SPEED > $FAN_2$FAN_SPEED_SET_PORT
 
     # Call script itself with -v arg
-    ./"$0" -v
+    "$0" -v
 elif [ "$1" = "--off" ]
 then
     # If first argument is --off
@@ -97,7 +97,7 @@ then
     echo 0 > $FAN_2$FAN_MANUAL_MODE_PORT
 
     # Call script itself with -v arg
-    ./"$0" -v
+    "$0" -v
 elif [ "$1" = "-v" ]
 then
     # If -v argument is provided
@@ -124,5 +124,5 @@ else
     echo "Unknown argument: $1!"
 
     # Call script itself with -h arg
-    ./"$0" -h
+    "$0" -h
 fi
