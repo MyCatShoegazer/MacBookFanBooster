@@ -23,6 +23,14 @@ function print_sensors() {
     printf '%s\t\t%s%s\n' "Fan 2:" "$FAN_2_RPM" "rpm"
 }
 
+function check_root() {
+    if [ $UID != 0 ]
+    then
+        echo "Please run this script with root to control fans."
+        exit 1
+    fi
+}
+
 if [ -z "$1" ]
 then
     echo "No argument supplied!"
