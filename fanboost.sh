@@ -50,7 +50,7 @@ function check_root() {
     if [ $UID != 0 ]
     then
         # If user isn't root print message and exit with code 1
-        echo "Please run this script with root to control fans."
+        echo "Please, run this script with root to control fans."
         exit 1
     fi
 }
