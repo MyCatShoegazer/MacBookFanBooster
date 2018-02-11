@@ -9,5 +9,6 @@ else
     chmod +x /usr/sbin/fanboost
     ln -s /usr/sbin/fanboost /usr/bin/fanboost
 
+    logger -t "mac_fan_booster" "Installed successfully."
     echo "Installed!"
 fi
