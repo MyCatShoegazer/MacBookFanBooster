@@ -8,7 +8,7 @@
             "name": "Bash-Debug",
             "type": "bashdb",
             "request": "launch",
-            "scriptPath": "${workspaceRoot}/${command:SelectScriptName}",
+            "scriptPath": "${command:SelectScriptName}",
             "commandLineArguments": "",
             "linux": {
                 "bashPath": "bash"
