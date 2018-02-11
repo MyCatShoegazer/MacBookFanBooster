@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script name
+SC_NAME="mac_fan_booster"
 
 # Path to the core temperature system sensor
 CORE_SENSOR="/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input"
@@ -51,6 +53,10 @@ function check_root() {
     then
         # If user isn't root print message and exit with code 1
         echo "Please, run this script with root to control fans."
+
+        # Write result to syslog
+        logger -t $SC_NAME "Can't execute with $1 without root."
+
         exit 1
     fi
 }
@@ -61,7 +67,10 @@ then
     # If first argument is --on
 
     # Call root cheking
-    check_root
+    check_root "$@"
+
+    # Write boosting enabled event to syslog
+    logger -t $SC_NAME "Boosting fans..."
 
     # Get fan 1 max available speed in RPMs
     FAN_1_MAX_SPEED=$(<$FAN_1$FAN_MAX_SPEED_PORT)
@@ -90,7 +99,10 @@ then
     # If first argument is --off
 
     # Call root checking
-    check_root
+    check_root "$@"
+
+    # Write fan speed control returned to system event to syslog
+    logger -t $SC_NAME "Boosting disabling. Returning fan speed control to system..."
 
     # Return Fan 1 and Fan 2 speed control to system
     echo 0 > $FAN_1$FAN_MANUAL_MODE_PORT
@@ -101,6 +113,9 @@ then
 elif [ "$1" = "-v" ]
 then
     # If -v argument is provided
+
+    # Write status printing to terminal event to syslog
+    logger -t $SC_NAME "Printing status..."
 
     # Clear screen, call print sensors with 0.3 sec pause in loop
     while true;
