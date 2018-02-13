@@ -146,8 +146,11 @@ then
     MAX_TEMP=67
     AVAIL_DEGREES=$((MAX_TEMP - TRESHOLD_TEMP))
 
-    FAN_1_RPM_STEP=$((FAN_1_MAX_RPM / AVAIL_DEGREES))
-    FAN_2_RPM_STEP=$((FAN_2_MAX_RPM / AVAIL_DEGREES))
+    FAN_1_AVAIL_RPM=$((FAN_1_MAX_RPM - FAN_1_MIN_RPM))
+    FAN_1_RPM_STEP=$((FAN_1_AVAIL_RPM / AVAIL_DEGREES))
+
+    FAN_2_AVAIL_RPM=$((FAN_2_MAX_RPM - FAN_2_MIN_RPM))
+    FAN_2_RPM_STEP=$((FAN_2_AVAIL_RPM / AVAIL_DEGREES))
 
     # Set manual mode for Fan 1 and Fan 2
     echo 1 > $FAN_1$MANUAL_OUT
@@ -168,6 +171,10 @@ then
 
             echo $FAN_1_RPM > $FAN_1$RPM_OUT
             echo $FAN_2_RPM > $FAN_2$RPM_OUT
+        elif [[ $CURRENT_TEMP < $TRESHOLD_TEMP ]]
+        then
+            echo $FAN_1_MIN_RPM > $FAN_1$RPM_OUT
+            echo $FAN_2_MIN_RPM > $FAN_2$RPM_OUT
         fi
 
         sleep 1
