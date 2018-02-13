@@ -141,6 +141,37 @@ then
     # If --auto argument is provided
 
     logger $SCRIPT_NAME "Working in auto mode..."
+
+    TRESHOLD_TEMP=55
+    MAX_TEMP=67
+    AVAIL_DEGREES=$((MAX_TEMP - TRESHOLD_TEMP))
+
+    FAN_1_RPM_STEP=$((FAN_1_MAX_RPM / AVAIL_DEGREES))
+    FAN_2_RPM_STEP=$((FAN_2_MAX_RPM / AVAIL_DEGREES))
+
+    # Set manual mode for Fan 1 and Fan 2
+    echo 1 > $FAN_1$MANUAL_OUT
+    echo 1 > $FAN_2$MANUAL_OUT
+
+    while true;
+    do
+        CURRENT_TEMP=$(<$CORE_SENSOR)
+        CURRENT_TEMP=$((CURRENT_TEMP / 1000))
+
+        if [[ ! $CURRENT_TEMP < $TRESHOLD_TEMP ]]
+        then
+            TEMP_OFFSET=$((MAX_TEMP - CURRENT_TEMP))
+            TEMP_STEP=$((AVAIL_DEGREES - TEMP_OFFSET))
+
+            FAN_1_RPM=$((FAN_1_RPM_STEP * TEMP_STEP))
+            FAN_2_RPM=$((FAN_2_RPM_STEP * TEMP_STEP))
+
+            echo $FAN_1_RPM > $FAN_1$RPM_OUT
+            echo $FAN_2_RPM > $FAN_2$RPM_OUT
+        fi
+
+        sleep 0.5
+    done
 else
     # Else print that provided argument is unknown
     echo "Unknown argument: $1!"
