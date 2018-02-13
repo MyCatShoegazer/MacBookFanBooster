@@ -163,14 +163,14 @@ then
             TEMP_OFFSET=$((MAX_TEMP - CURRENT_TEMP))
             TEMP_STEP=$((AVAIL_DEGREES - TEMP_OFFSET))
 
-            FAN_1_RPM=$((FAN_1_RPM_STEP * TEMP_STEP))
-            FAN_2_RPM=$((FAN_2_RPM_STEP * TEMP_STEP))
+            FAN_1_RPM=$((FAN_1_RPM_STEP * TEMP_STEP + FAN_1_MIN_RPM))
+            FAN_2_RPM=$((FAN_2_RPM_STEP * TEMP_STEP + FAN_2_MIN_RPM))
 
             echo $FAN_1_RPM > $FAN_1$RPM_OUT
             echo $FAN_2_RPM > $FAN_2$RPM_OUT
         fi
 
-        sleep 0.5
+        sleep 1
     done
 else
     # Else print that provided argument is unknown
