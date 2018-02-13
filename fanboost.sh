@@ -141,6 +141,9 @@ elif [[ "$1" = "--auto" && "$2" =~ ^[0-9]+$ && "$3" =~ ^[0-9]+$ ]]
 then
     # If --auto argument is provided
 
+    # Call root cheking
+    check_root "$@"
+
     # Temperature after which cooling will be enabled
     TRESHOLD_TEMP=$2
 
