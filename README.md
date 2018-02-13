@@ -35,11 +35,7 @@ To close status printing provide `ctrl+c` on your keyboard.
 ### Disabling boost
 
 For returning to default RPMs type `sudo fanboost --off` in your terminal. Also it is applicable 
-for auto mode.
-
-To close status printing provide `ctrl+c` on your keyboard.
-
-> Note: that script will continue to work in background.
+for auto mode. Kills all instances of MacFanBooster.
 
 ### Enabling auto mode
 
