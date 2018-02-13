@@ -75,6 +75,20 @@ function check_root() {
     fi
 }
 
+# Checks if process is already running
+function mutex() {
+    local file=$1 pid pids
+
+    exec 9>>"$file"
+    { pids=$(fuser -f "$file"); } 2>&- 9>&- 
+    for pid in $pids; do
+        [[ $pid = $$ ]] && continue
+
+        exec 9>&- 
+        return 1 # Locked by a pid.
+    done 
+}
+
 # Main condition sequence
 if [ "$1" = "--on" ]
 then
@@ -82,6 +96,9 @@ then
 
     # Call root cheking
     check_root "$@"
+
+    # If script with this option is already running then exit
+    mutex /var/run/mac_fan_booster.lock || { echo "$SCRIPT_NAME is already running!" >&2; exit 1; }
 
     # Write boosting enabled event to syslog
     logger -t $SCRIPT_NAME "Boosting fans..."
@@ -110,8 +127,8 @@ then
     echo 0 > $FAN_1$MANUAL_OUT
     echo 0 > $FAN_2$MANUAL_OUT
 
-    # Call script itself with -v arg
-    "$0" -v
+    # Kill all instances of script
+    pkill -9 -f "$0"
 elif [ "$1" = "-v" ]
 then
     # If -v argument is provided
@@ -143,6 +160,9 @@ then
 
     # Call root cheking
     check_root "$@"
+
+    # If script with this option is already running then exit
+    mutex /var/run/mac_fan_booster.lock || { echo "$SCRIPT_NAME is already running!" >&2; exit 1; }
 
     # Temperature after which cooling will be enabled
     TRESHOLD_TEMP=$2
