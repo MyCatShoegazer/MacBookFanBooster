@@ -134,6 +134,9 @@ then
     printf '\t%s\t%c\t%s\n' "-v" "-" "prints sensor values to screen."
     printf '\t%s\t%c\t%s\n' "--on" "-" "boosts fans. (required root)"
     printf '\t%s\t%c\t%s\n' "--off" "-" "returns fan speed control to system. (required root)"
+elif [ "$1" = "--auto" ]
+then
+    logger $SC_NAME "Working in auto mode..."
 else
     # Else print that provided argument is unknown
     echo "Unknown argument: $1!"
