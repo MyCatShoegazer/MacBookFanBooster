@@ -132,51 +132,88 @@ then
 
     # Print help text
     printf '%s\n' "Available arguments:"
-    printf '\t%s\t%c\t%s\n' "-h" "-" "prints this help."
-    printf '\t%s\t%c\t%s\n' "-v" "-" "prints sensor values to screen."
-    printf '\t%s\t%c\t%s\n' "--on" "-" "boosts fans. (required root)"
-    printf '\t%s\t%c\t%s\n' "--off" "-" "returns fan speed control to system. (required root)"
-elif [ "$1" = "--auto" ]
+    printf '\t%s\t\t%c\t%s\n' "-h" "-" "prints this help."
+    printf '\t%s\t\t%c\t%s\n' "-v" "-" "prints sensor values to screen."
+    printf '\t%s\t\t%c\t%s\n' "--on" "-" "boosts fans. (required root)"
+    printf '\t%s\t\t%c\t%s\n' "--off" "-" "returns fan speed control to system. (required root)"
+    printf '\t%s\t%c\t%s\n' "--auto min max" "-" "automaticaly controls fans rpm between min and max core temp"
+elif [[ "$1" = "--auto" && "$2" =~ ^[0-9]+$ && "$3" =~ ^[0-9]+$ ]]
 then
     # If --auto argument is provided
 
-    logger $SCRIPT_NAME "Working in auto mode..."
+    # Temperature after which cooling will be enabled
+    TRESHOLD_TEMP=$2
 
-    TRESHOLD_TEMP=55
-    MAX_TEMP=67
+    # Maximal temperature
+    MAX_TEMP=$3
+
+    if [ "$TRESHOLD_TEMP" -gt "$MAX_TEMP" ]
+    then
+        # If treshold temperature is greater than maximal temperature
+
+        echo "Minimal treshold temperature can't be greater than maximum core temperature!"
+        exit 1
+    elif [ "$TRESHOLD_TEMP" = 0 -o "$MAX_TEMP" = 0 ]
+    then
+        # If treshold temperature of maximal temperature are zeroes
+
+        echo "Minimal treshold or maximum core temperature can't be zero!"
+        exit 1
+    fi
+
+    # Write event to syslog
+    logger $SCRIPT_NAME "Working in auto mode. Treshold ($2) -> Max ($3)."
+
+    # Available temperature degrees for current temperature range
     AVAIL_DEGREES=$((MAX_TEMP - TRESHOLD_TEMP))
 
+    # Available fan rpm to work with
     FAN_1_AVAIL_RPM=$((FAN_1_MAX_RPM - FAN_1_MIN_RPM))
+
+    # Incrementing rpm step
     FAN_1_RPM_STEP=$((FAN_1_AVAIL_RPM / AVAIL_DEGREES))
 
+    # Available fan rpm to work with
     FAN_2_AVAIL_RPM=$((FAN_2_MAX_RPM - FAN_2_MIN_RPM))
+
+    # Incrementing rpm step
     FAN_2_RPM_STEP=$((FAN_2_AVAIL_RPM / AVAIL_DEGREES))
 
     # Set manual mode for Fan 1 and Fan 2
     echo 1 > $FAN_1$MANUAL_OUT
     echo 1 > $FAN_2$MANUAL_OUT
 
+    # Cooling loop
     while true;
     do
+        # Take current core temp
         CURRENT_TEMP=$(<$CORE_SENSOR)
+        # Divide it by 1000 to get traditional degrees
         CURRENT_TEMP=$((CURRENT_TEMP / 1000))
 
         if [[ ! $CURRENT_TEMP < $TRESHOLD_TEMP ]]
         then
+            # If current core temp rised greter than treshold
+
             TEMP_OFFSET=$((MAX_TEMP - CURRENT_TEMP))
             TEMP_STEP=$((AVAIL_DEGREES - TEMP_OFFSET))
 
             FAN_1_RPM=$((FAN_1_RPM_STEP * TEMP_STEP + FAN_1_MIN_RPM))
             FAN_2_RPM=$((FAN_2_RPM_STEP * TEMP_STEP + FAN_2_MIN_RPM))
 
+            # Set fans speed
             echo $FAN_1_RPM > $FAN_1$RPM_OUT
             echo $FAN_2_RPM > $FAN_2$RPM_OUT
         elif [[ $CURRENT_TEMP < $TRESHOLD_TEMP ]]
         then
+            # If current core temp is less than treshold
+
+            # Set minimal fans speed
             echo $FAN_1_MIN_RPM > $FAN_1$RPM_OUT
             echo $FAN_2_MIN_RPM > $FAN_2$RPM_OUT
         fi
 
+        # Need to sleep cause to very fast rpm changing
         sleep 1
     done
 else
