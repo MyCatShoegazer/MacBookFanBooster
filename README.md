@@ -46,7 +46,7 @@ To close status printing provide `ctrl+c` on your keyboard.
 Auto mode is recommended in most cases except you want to staticaly boost your fans. To run script
 in this mode you need to provide `sudo fanboost --auto min max` in your terminal. **min** is a
 treshold after which auto mode starting cooling your system and trying to keep temperature before
-max.
+**max**. For example: `sudo fanboost --auto 55 67`.
 
 To close status printing provide `ctrl+c` on your keyboard.
 
