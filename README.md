@@ -3,6 +3,7 @@
 Is a simple script for boosting fans on MacBooks under linux. This script controls cooling system via applesmc driver installed in system.
 
 > Warning: this script works only with MacBooks with **two** fans and only if applesmc driver is **installed** in system.
+> Warning: this script works only on MacBooks **without** T1/T2 chips.
 
 ## Installing
 
